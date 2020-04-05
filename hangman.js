@@ -1,9 +1,14 @@
-var passwd = "May the Force be with you";
+var passwd = "Nie święci garnki lepią";
 passwd = passwd.toUpperCase();
 
 var length = passwd.length;
 
+var yes = new Audio("yes.wav");
+var no = new Audio("no.wav");
+
 var passwd1 = "";
+
+var fails = 0;
 
 for (i = 0; i < length; i++) {
     if (passwd.charAt(i) == " ") passwd1 = passwd1 + " ";
@@ -58,13 +63,65 @@ function start() {
     var divContent = "";
 
     for (i = 0; i < 35; i++) {
-        divContent = divContent + '<div class="letter">' + letters[i] + '</div>'
+        var element = "let" + i;
+
+        divContent = divContent + '<div class="letter" onclick="check(' + i + ')" id="' + element + '">' + letters[i] + '</div>'
         if ((i + 1) % 7 == 0) divContent = divContent + '<div style="clear:both;"></div>'
     }
 
     document.getElementById("alphabet").innerHTML = divContent;
 
-
-
     writePassword();
+}
+
+String.prototype.setChar = function(place, char) {
+    if (place > this.length - 1) return this.toString();
+    else return this.substr(0, place) + char + this.substr(place + 1);
+}
+
+function check(nr) {
+    var hit = false;
+
+    for (i = 0; i < length; i++) {
+        if (passwd.charAt(i) == letters[nr]) {
+            passwd1 = passwd1.setChar(i, letters[nr]);
+            hit = true;
+        }
+    }
+
+    if (hit == true) {
+        var element = "let" + nr;
+        yes.play();
+
+        document.getElementById(element).style.background = "#003300";
+        document.getElementById(element).style.color = "#00c000";
+        document.getElementById(element).style.border = "3px solid #00c000";
+        document.getElementById(element).style.cursor = "default";
+        writePassword();
+    } else {
+        var element = "let" + nr;
+        no.play();
+
+        document.getElementById(element).style.background = "#330000";
+        document.getElementById(element).style.color = "#C00000";
+        document.getElementById(element).style.border = "3px solid #C00000";
+        document.getElementById(element).style.cursor = "default";
+        document.getElementById(element).setAttribute("onclick", ";");
+
+        fails++;
+        var picture = "img/s" + fails + ".jpg";
+        document.getElementById("gallows").innerHTML = '<img src="' + picture + '">';
+
+    }
+
+    //win
+    if (passwd == passwd1)
+        document.getElementById("alphabet").innerHTML = "Tak jest, podano prawidłowe hasło: " + passwd +
+        '<br><br><span class="reset" onclick="location.reload()">JESZCZE RAZ?</span>';
+
+    //lose
+    if(fails >= 9) {
+        document.getElementById("alphabet").innerHTML = "Przegrana! Prawidłowe hasło: " + passwd +
+        '<br><br><span class="reset" onclick="location.reload()">JESZCZE RAZ?</span>';
+    }
 }

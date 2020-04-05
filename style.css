@@ -1,6 +1,8 @@
 body {
     background-color: #000000;
     color: lightgray;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
     font-size: 28px;
 }
 
@@ -49,4 +51,14 @@ body {
     background-color: #222222;
     color: #ffffff;
     border-color: #ffffff;
+}
+
+.reset {
+    color: green;
+    cursor: pointer;
+    font-size: 48px;
+}
+
+.reset:hover {
+    color: white;
 }
